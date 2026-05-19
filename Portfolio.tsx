@@ -48,35 +48,24 @@ body{margin:0;overflow-x:hidden}
 .tc-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C8FF00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
 option{background:${T.black}}
 
-@media(max-width:768px){#tc-dot,#tc-ring{display:none!important}body{cursor:auto!important}
-#tc-hero .tc-hero-sub{padding-left:1.5rem!important;padding-right:1.5rem!important;padding-bottom:5rem!important}
-#tc-hero .tc-stats-bar{gap:1.5rem!important;padding:0.8rem 1.5rem!important;flex-wrap:wrap!important;justify-content:space-around!important}
-#tc-hero .tc-stats-bar>div{flex:1 1 30%!important;text-align:center!important;justify-content:center!important}
-#tc-hero .tc-scroll-ind{display:none!important}
-.tc-section-pad{padding-left:1.5rem!important;padding-right:1.5rem!important;padding-top:4rem!important;padding-bottom:4rem!important}
-.tc-nav-mob{padding:1rem 1.5rem!important}
-.tc-nav-links-mob{display:none!important}
-.tc-srv-mob{height:auto!important}
-.tc-srv-mob>*{position:relative!important;height:auto!important}
-.tc-srv-track-mob{width:100%!important;flex-direction:column!important;transform:none!important}
-.tc-srv-panel-mob{width:100%!important;height:auto!important;min-height:100vh!important}
-.tc-srv-panel-mob>div{padding:5rem 1.5rem 3rem!important;grid-template-columns:1fr!important;gap:2rem!important}
-.tc-srv-panel-mob .tc-srv-side{display:none!important}
-.tc-srv-dots-mob{display:none!important}
-.tc-srv-label-mob{left:1.5rem!important;top:1.5rem!important}
-.tc-srv-hint-mob{display:none!important}
-.tc-srv-panel-mob .tc-srv-ghost{font-size:40vw!important;right:1rem!important}
-.tc-form-mob{padding:1.5rem!important}
-.tc-cta-mob{padding:4rem 1.5rem!important}
-.tc-footer-mob{padding:3rem 1.5rem 1.5rem!important}
-.tc-sobre-mob{grid-template-columns:1fr!important;gap:2.5rem!important;padding:4rem 1.5rem!important}
-.tc-valores-mob{padding:4rem 1.5rem!important}
-.tc-processo-mob{padding:4rem 1.5rem!important}
-.tc-agendar-mob{grid-template-columns:1fr!important;gap:3rem!important;padding:4rem 1.5rem!important}
-.tc-depo-mob{grid-template-columns:1fr!important;gap:2.5rem!important;padding:4rem 1.5rem!important}
-.tc-depo-stats-mob{grid-template-columns:1fr 1fr!important}
-.tc-hero-title{font-size:clamp(3.5rem,20vw,13rem)!important}
-.tc-hero-tagline{font-size:clamp(0.85rem,4vw,2rem)!important}
+/* Mobile menu */
+.tc-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:none;padding:8px;z-index:600}
+.tc-hamburger span{display:block;width:24px;height:2px;background:${T.white};transition:all .3s ease}
+
+/* Mobile nav overlay */
+.tc-mobile-nav{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(6,6,6,.97);z-index:550;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.tc-mobile-nav.tc-mobile-nav-open{opacity:1;pointer-events:all}
+.tc-mobile-nav a{font-size:1.2rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,242,242,.8);text-decoration:none}
+
+@media(max-width:768px){
+  #tc-dot,#tc-ring{display:none!important}
+  body{cursor:auto!important}
+  .tc-hamburger{display:flex!important}
+  .tc-desktop-nav{display:none!important}
+  .tc-desktop-cta{display:none!important}
+  .tc-srv-desktop{display:none!important}
+  .tc-srv-mobile{display:block!important}
+  *{cursor:auto!important}
 }
 `;
 
@@ -129,8 +118,8 @@ export function Portfolio() {
   // Hero
   const heroImgRef  = useRef<HTMLDivElement>(null);
   const heroOvlRef  = useRef<HTMLDivElement>(null);
-  const heroL1Ref   = useRef<HTMLSpanElement>(null);  // THALES (outline)
-  const heroL2Ref   = useRef<HTMLSpanElement>(null);  // COELHO (solid)
+  const heroL1Ref   = useRef<HTMLSpanElement>(null);
+  const heroL2Ref   = useRef<HTMLSpanElement>(null);
   const heroSubRef  = useRef<HTMLDivElement>(null);
   const heroBtnsRef = useRef<HTMLDivElement>(null);
   const statN1Ref   = useRef<HTMLSpanElement>(null);
@@ -197,7 +186,6 @@ export function Portfolio() {
         const dot  = dotRef.current;
         const ring = ringRef.current;
 
-        // Detect element under cursor every frame — reliable & never stale
         const elUnder = document.elementFromPoint(mx, my) as HTMLElement | null;
         const isImg  = !!elUnder?.closest('.tc-img-h');
         const isSrv  = !!elUnder?.closest('.tc-srv-h');
@@ -205,7 +193,6 @@ export function Portfolio() {
 
         if (dot) {
           dot.style.transform = `translate(${mx-4}px,${my-4}px)`;
-          // Dot hides when cursor is over an interactive element
           dot.style.opacity = (isLink || isImg || isSrv) ? '0' : '1';
           dot.style.transform = `translate(${mx-4}px,${my-4}px) scale(${clicking ? 0.5 : 1})`;
         }
@@ -217,7 +204,6 @@ export function Portfolio() {
             : 1;
           ring.style.transform   = `translate(${rx-22}px,${ry-22}px) scale(${sc})`;
           ring.style.opacity     = '1';
-          // Fill: lime tint on interactive, transparent otherwise
           ring.style.background  = isLink ? `${T.lime}28`
             : isImg               ? `${T.lime}40`
             : 'transparent';
@@ -236,7 +222,6 @@ export function Portfolio() {
           const heroH = heroEl.offsetHeight;
           const p = Math.max(0, Math.min(1, sy / (heroH * 0.75)));
 
-          // THALES flies UP, COELHO flies DOWN
           if (heroL1Ref.current) {
             heroL1Ref.current.style.transform = `translateY(${p * -110}px)`;
             heroL1Ref.current.style.opacity   = String(Math.max(0, 1 - p * 1.8));
@@ -246,13 +231,9 @@ export function Portfolio() {
             heroL2Ref.current.style.opacity   = String(Math.max(0, 1 - p * 1.8));
           }
 
-          // Image parallax
           if (heroImgRef.current) heroImgRef.current.style.transform = `translateY(${sy*0.42}px) scale(1.12)`;
-
-          // Overlay darkens
           if (heroOvlRef.current) heroOvlRef.current.style.opacity = String(0.58 + p*0.3);
 
-          // Sub + btns fade out quicker
           if (heroSubRef.current) {
             heroSubRef.current.style.opacity   = String(Math.max(0, 1 - p*2.5));
             heroSubRef.current.style.transform = `translateY(${p*-25}px)`;
@@ -262,7 +243,6 @@ export function Portfolio() {
             heroBtnsRef.current.style.transform = `translateY(${p*-20}px)`;
           }
 
-          // Stats counting
           const sp = Math.min(1, sy / 300);
           if (statN1Ref.current) statN1Ref.current.textContent = `${Math.round(85*sp)}+`;
           if (statN2Ref.current) statN2Ref.current.textContent = `${Math.round(220*sp)}+`;
@@ -315,14 +295,13 @@ export function Portfolio() {
         bar.style.transform = `scaleX(${p})`;
       });
 
-      // ── Services horizontal carousel ─────────────────────────
+      // ── Services horizontal carousel (desktop only) ──────────
       if (!isMobile && srvContRef.current && srvTrackRef.current) {
         const rect = srvContRef.current.getBoundingClientRect();
         const scrollable = srvContRef.current.offsetHeight - winH;
         const p = Math.max(0, Math.min(1, -rect.top / scrollable));
         srvTrackRef.current.style.transform = `translateX(${-p*2*winW}px)`;
 
-        // Dot indicators
         if (srvDotsRef.current) {
           const activePanel = Math.min(2, Math.round(p * 2));
           const dots = srvDotsRef.current.children;
@@ -382,6 +361,11 @@ export function Portfolio() {
     };
   }, []);
 
+  const navLinks = [['sobre','Sobre'],['valores','Valores'],['servicos','Serviços'],['agendar','Avaliação'],['depoimentos','Resultados']];
+
+  const px = (v: number) => `${v}px`;
+  const mob = (d: number, m: number) => `clamp(${m}px, ${m}px + (${d}-${m})*((100vw - 320px) / (768 - 320)), ${d}px)`;
+
   // ── JSX ──────────────────────────────────────────────────────────
   return (
     <div style={{ background:T.black, color:T.white, fontFamily:"'DM Sans',sans-serif", overflowX:'clip', cursor:'none', minHeight:'100vh' }}>
@@ -390,10 +374,20 @@ export function Portfolio() {
       <div id="tc-ring" ref={ringRef} />
       <div id="tc-prog" ref={progRef} />
 
+      {/* ── MOBILE NAV OVERLAY ──────────────────────────────── */}
+      <div className={`tc-mobile-nav${menuOpen ? ' tc-mobile-nav-open' : ''}`}>
+        {navLinks.map(([id,label]) => (
+          <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)} style={{ fontSize:'1.2rem', fontWeight:500, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(242,242,242,.8)', textDecoration:'none' }}>{label}</a>
+        ))}
+        <button className="tc-mag" onClick={() => setMenuOpen(false)} style={{ background:T.lime, color:T.black, border:'none', padding:'.9rem 2rem', fontSize:'.8rem', fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', borderRadius:2, marginTop:'1rem' }}>
+          <span className="tc-mag-inner">Começar Agora</span>
+        </button>
+      </div>
+
       {/* ── NAV ─────────────────────────────────────────────── */}
-      <nav className="tc-nav-mob" style={{
+      <nav style={{
         position:'fixed', top:0, left:0, right:0, zIndex:500,
-        padding:'1.4rem 3rem',
+        padding:'1.2rem clamp(1.2rem, 4vw, 3rem)',
         background: scrolled ? 'rgba(6,6,6,.92)' : 'transparent',
         backdropFilter: scrolled ? 'blur(20px)' : 'none',
         borderBottom: scrolled ? '0.5px solid rgba(255,255,255,.06)' : '0.5px solid transparent',
@@ -406,20 +400,26 @@ export function Portfolio() {
           <span style={{ position:'absolute', top:-4, right:-18, color:T.lime, fontSize:'.6rem', fontWeight:700 }}>PT</span>
         </div>
 
-        <div className="tc-nav-links-mob" style={{ display:'flex', gap:'2.5rem', alignItems:'center' }}>
-          {[['sobre','Sobre'],['valores','Valores'],['servicos','Serviços'],['agendar','Avaliação'],['depoimentos','Resultados']].map(([id,label]) => (
+        <div className="tc-desktop-nav" style={{ display:'flex', gap:'2.5rem', alignItems:'center' }}>
+          {navLinks.map(([id,label]) => (
             <a key={id} href={`#${id}`} className="tc-navlink" style={{ fontSize:'.7rem', fontWeight:500, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(242,242,242,.65)' }}>{label}</a>
           ))}
         </div>
 
-        <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.7rem 1.6rem', fontSize:'.7rem', fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
+        <button className="tc-desktop-cta tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.7rem 1.6rem', fontSize:'.7rem', fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
           <span className="tc-mag-inner">Começar Agora</span>
+        </button>
+
+        {/* Hamburger */}
+        <button className="tc-hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
+          <span style={{ transform: menuOpen ? 'rotate(45deg) translate(5px,5px)' : 'none' }} />
+          <span style={{ opacity: menuOpen ? 0 : 1 }} />
+          <span style={{ transform: menuOpen ? 'rotate(-45deg) translate(5px,-5px)' : 'none' }} />
         </button>
       </nav>
 
       {/* ── HERO ─────────────────────────────────────────────── */}
       <section id="tc-hero" style={{ position:'relative', height:'100dvh', overflow:'hidden', display:'flex', flexDirection:'column', justifyContent:'flex-end' }}>
-        {/* BG */}
         <div ref={heroImgRef} style={{ position:'absolute', inset:'-10% 0 0 0', willChange:'transform' }}>
           <img
             src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&auto=format&fit=crop&q=85"
@@ -430,67 +430,62 @@ export function Portfolio() {
         <div ref={heroOvlRef} style={{ position:'absolute', inset:0, background:T.black, opacity:.58, zIndex:1 }} />
         <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, #060606 0%, transparent 55%)', zIndex:2 }} />
 
-        {/* Main title — centered, massive, split on scroll */}
-        <div style={{ position:'absolute', inset:0, zIndex:3, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:0, pointerEvents:'none', userSelect:'none' }}>
-          <span ref={heroL1Ref} className="tc-outline tc-hero-title" style={{
+        <div style={{ position:'absolute', inset:0, zIndex:3, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:0, pointerEvents:'none', userSelect:'none', padding:'0 1rem' }}>
+          <span ref={heroL1Ref} className="tc-outline" style={{
             fontFamily:"'Montserrat',sans-serif", fontWeight:900,
-            fontSize:'clamp(5rem,16vw,13rem)', lineHeight:.88,
-            letterSpacing:'-0.03em', willChange:'transform,opacity', display:'block',
+            fontSize:'clamp(3.5rem,16vw,13rem)', lineHeight:.88,
+            letterSpacing:'-0.03em', willChange:'transform,opacity', display:'block', textAlign:'center',
           }}>THALES</span>
 
-          <span ref={heroL2Ref} className="tc-hero-title" style={{
+          <span ref={heroL2Ref} style={{
             fontFamily:"'Montserrat',sans-serif", fontWeight:900,
-            fontSize:'clamp(5rem,16vw,13rem)', lineHeight:.88,
-            letterSpacing:'-0.03em', color:T.white, willChange:'transform,opacity', display:'block',
+            fontSize:'clamp(3.5rem,16vw,13rem)', lineHeight:.88,
+            letterSpacing:'-0.03em', color:T.white, willChange:'transform,opacity', display:'block', textAlign:'center',
           }}>COELHO</span>
 
-          {/* Lime italic under */}
-          <span className="tc-hero-tagline" style={{ fontFamily:"'DM Sans',sans-serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(1rem,2.5vw,2rem)', color:T.lime, marginTop:'1.2rem', letterSpacing:'.01em' }}>
+          <span style={{ fontFamily:"'DM Sans',sans-serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(.85rem,2.5vw,2rem)', color:T.lime, marginTop:'1.2rem', letterSpacing:'.01em', textAlign:'center', padding:'0 .5rem' }}>
             transforma corpos, transforma vidas.
           </span>
         </div>
 
-        {/* Tag + Sub + Btns — bottom-left */}
-        <div className="tc-hero-sub" style={{ position:'relative', zIndex:4, padding:'0 3rem 7rem', maxWidth:1400, width:'100%', margin:'0 auto' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:'1rem', marginBottom:'1rem' }}>
-            <div style={{ width:36, height:1, background:T.lime }} />
-            <span style={{ color:T.lime, fontSize:'.62rem', letterSpacing:'.3em', fontWeight:500, textTransform:'uppercase' }}>Personal Trainer · Educação Física</span>
+        <div style={{ position:'relative', zIndex:4, padding:'0 clamp(1.2rem,4vw,3rem) clamp(4rem,8vw,7rem)', maxWidth:1400, width:'100%', margin:'0 auto' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'.75rem' }}>
+            <div style={{ width:28, height:1, background:T.lime }} />
+            <span style={{ color:T.lime, fontSize:'clamp(.5rem,1.5vw,.62rem)', letterSpacing:'.3em', fontWeight:500, textTransform:'uppercase' }}>Personal Trainer · Educação Física</span>
           </div>
 
-          <div ref={heroSubRef} style={{ maxWidth:440, marginBottom:'1.5rem', willChange:'opacity,transform' }}>
-            <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', fontSize:'1rem', lineHeight:1.75, margin:0 }}>
+          <div ref={heroSubRef} style={{ maxWidth:440, marginBottom:'1.2rem', willChange:'opacity,transform' }}>
+            <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', fontSize:'clamp(.85rem,2vw,1rem)', lineHeight:1.75, margin:0 }}>
               Treinamento personalizado que respeita onde você está<br />e leva onde você quer chegar.
             </p>
           </div>
 
-          <div ref={heroBtnsRef} style={{ display:'flex', gap:'1rem', willChange:'opacity,transform' }}>
-            <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.95rem 2rem', fontSize:'.72rem', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
+          <div ref={heroBtnsRef} style={{ display:'flex', gap:'.75rem', flexWrap:'wrap', willChange:'opacity,transform' }}>
+            <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.8rem 1.5rem', fontSize:'clamp(.65rem,1.5vw,.72rem)', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
               <span className="tc-mag-inner">Agendar Avaliação</span>
             </button>
-            <button className="tc-mag" style={{ background:'transparent', color:T.white, border:'1px solid rgba(255,255,255,.2)', padding:'.95rem 2rem', fontSize:'.72rem', fontWeight:500, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
+            <button className="tc-mag" style={{ background:'transparent', color:T.white, border:'1px solid rgba(255,255,255,.2)', padding:'.8rem 1.5rem', fontSize:'clamp(.65rem,1.5vw,.72rem)', fontWeight:500, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
               <span className="tc-mag-inner">Ver Serviços</span>
             </button>
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="tc-scroll-ind" style={{ position:'absolute', bottom:'7rem', right:'3rem', zIndex:4, display:'flex', flexDirection:'column', alignItems:'center', gap:'.5rem' }}>
+        <div style={{ position:'absolute', bottom:'clamp(5rem,10vw,7rem)', right:'clamp(1.2rem,4vw,3rem)', zIndex:4, display:'flex', flexDirection:'column', alignItems:'center', gap:'.5rem' }}>
           <span style={{ fontSize:'.5rem', letterSpacing:'.3em', writingMode:'vertical-rl', textTransform:'uppercase', color:'rgba(255,255,255,.3)' }}>SCROLL</span>
           <div style={{ width:1, height:40, background:'rgba(255,255,255,.12)', overflow:'hidden', position:'relative' }}>
             <div className="tc-scroll-pulse" style={{ position:'absolute', top:0, left:0, width:'100%', height:'100%', background:T.lime }} />
           </div>
         </div>
 
-        {/* Stats bar */}
-        <div className="tc-stats-bar" style={{ position:'absolute', bottom:0, left:0, right:0, zIndex:5, background:'rgba(6,6,6,.8)', backdropFilter:'blur(12px)', borderTop:'.5px solid rgba(255,255,255,.06)', display:'flex', justifyContent:'center', gap:'5rem', padding:'1rem 3rem' }}>
+        <div style={{ position:'absolute', bottom:0, left:0, right:0, zIndex:5, background:'rgba(6,6,6,.8)', backdropFilter:'blur(12px)', borderTop:'.5px solid rgba(255,255,255,.06)', display:'flex', justifyContent:'center', gap:'clamp(1.5rem,5vw,5rem)', padding:'.8rem clamp(1.2rem,4vw,3rem)', flexWrap:'wrap' }}>
           {[
             { nRef: statN1Ref, n:'0+', l:'Alunos Ativos' },
             { nRef: statN2Ref, n:'0+', l:'Transformações' },
             { nRef: statN3Ref, n:'0+', l:'Anos' },
           ].map(({ nRef, n, l }) => (
-            <div key={l} style={{ display:'flex', alignItems:'baseline', gap:'.65rem' }}>
-              <span ref={nRef} style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', color:T.white }}>{n}</span>
-              <span style={{ fontSize:'.62rem', letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.45)' }}>{l}</span>
+            <div key={l} style={{ display:'flex', alignItems:'baseline', gap:'.5rem' }}>
+              <span ref={nRef} style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.4rem,4vw,2rem)', color:T.white }}>{n}</span>
+              <span style={{ fontSize:'clamp(.5rem,1.3vw,.62rem)', letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.45)' }}>{l}</span>
             </div>
           ))}
         </div>
@@ -498,7 +493,7 @@ export function Portfolio() {
 
       {/* ── TICKER ───────────────────────────────────────────── */}
       <div style={{ background:T.lime, height:48, overflow:'hidden', display:'flex', alignItems:'center', borderTop:'1px solid rgba(0,0,0,.12)', borderBottom:'1px solid rgba(0,0,0,.12)' }}>
-        <div ref={tickerRef} className="tc-ticker" style={{ whiteSpace:'nowrap', display:'flex', fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.45rem', color:T.black, letterSpacing:'.1em' }}>
+        <div ref={tickerRef} className="tc-ticker" style={{ whiteSpace:'nowrap', display:'flex', fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1rem,3vw,1.45rem)', color:T.black, letterSpacing:'.1em' }}>
           {[...Array(8)].map((_,i) => (
             <span key={i} style={{ marginRight:'2.5rem' }}>THALES COELHO · PERSONAL TRAINER · TRANSFORMAÇÃO REAL · TREINO ONLINE E PRESENCIAL · CREF 123456-G/SP ·</span>
           ))}
@@ -506,17 +501,15 @@ export function Portfolio() {
       </div>
 
       {/* ── SOBRE ────────────────────────────────────────────── */}
-      <section id="sobre" className="tc-sobre-mob" style={{ padding:'8rem 3rem', maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:'5rem', alignItems:'center' }}>
-        {/* Image with clip-path reveal */}
+      <section id="sobre" style={{ padding:'clamp(3rem,8vw,8rem) clamp(1.2rem,4vw,3rem)', maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(300px,100%),1fr))', gap:'clamp(2rem,5vw,5rem)', alignItems:'center' }}>
         <div style={{ position:'relative' }}>
           <div style={{ position:'absolute', inset:0, border:`1px solid ${T.lime}`, transform:'translate(12px,12px)', borderRadius:2, zIndex:0 }} />
           <div ref={sobreImgRef} className="tc-clip-img tc-img-h" style={{ position:'relative', aspectRatio:'3/4', overflow:'hidden', borderRadius:2, zIndex:1, background:T.gray }}>
             <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=900&auto=format&fit=crop&q=85" alt="Thales Coelho" loading="lazy" style={{ width:'100%', height:'100%', objectFit:'cover', filter:'grayscale(10%)', display:'block' }} />
           </div>
-          <div style={{ position:'absolute', left:-16, top:-36, fontFamily:"'Bebas Neue',sans-serif", fontSize:'8rem', color:`${T.lime}15`, lineHeight:1, pointerEvents:'none', userSelect:'none' }}>05</div>
+          <div style={{ position:'absolute', left:-16, top:-36, fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(4rem,12vw,8rem)', color:`${T.lime}15`, lineHeight:1, pointerEvents:'none', userSelect:'none' }}>05</div>
         </div>
 
-        {/* Text */}
         <div>
           <Reveal>
             <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'1.5rem' }}>
@@ -526,21 +519,20 @@ export function Portfolio() {
           </Reveal>
 
           <Reveal delay={80}>
-            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5vw,4.8rem)', lineHeight:.9, margin:'0 0 2rem', letterSpacing:'-.01em' }}>
+            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.2rem,6vw,4.8rem)', lineHeight:.9, margin:'0 0 2rem', letterSpacing:'-.01em' }}>
               FORMADO PARA<br /><span style={{ color:T.lime }}>TRANSFORMAR</span>
             </h2>
           </Reveal>
 
           <Reveal delay={140}>
-            {/* Char-reveal paragraphs — content set by JS */}
-            <p ref={sobreDescRef} style={{ fontWeight:300, color:'rgba(242,242,242,.65)', lineHeight:1.85, marginBottom:'1.2rem', fontSize:'1rem' }} />
-            <p ref={sobreDesc2Ref} style={{ fontWeight:300, color:'rgba(242,242,242,.65)', lineHeight:1.85, marginBottom:'2.5rem', fontSize:'1rem' }} />
+            <p ref={sobreDescRef} style={{ fontWeight:300, color:'rgba(242,242,242,.65)', lineHeight:1.85, marginBottom:'1.2rem', fontSize:'clamp(.85rem,2vw,1rem)' }} />
+            <p ref={sobreDesc2Ref} style={{ fontWeight:300, color:'rgba(242,242,242,.65)', lineHeight:1.85, marginBottom:'2.5rem', fontSize:'clamp(.85rem,2vw,1rem)' }} />
           </Reveal>
 
           <Reveal delay={200}>
             <ul style={{ listStyle:'none', padding:0, margin:'0 0 2.5rem', display:'flex', flexDirection:'column', gap:'.85rem' }}>
               {['Bacharel em Educação Física','Especialização em Treinamento Funcional','Personal Trainer certificado','220+ alunos transformados'].map(item => (
-                <li key={item} style={{ display:'flex', alignItems:'center', gap:'.85rem', fontSize:'.9rem', fontWeight:500, letterSpacing:'.01em' }}>
+                <li key={item} style={{ display:'flex', alignItems:'center', gap:'.85rem', fontSize:'clamp(.8rem,2vw,.9rem)', fontWeight:500, letterSpacing:'.01em' }}>
                   <span style={{ color:T.lime }}>→</span> {item}
                 </li>
               ))}
@@ -550,19 +542,19 @@ export function Portfolio() {
       </section>
 
       {/* ── VALORES ──────────────────────────────────────────── */}
-      <section id="valores" className="tc-valores-mob" style={{ background:T.gray, padding:'7rem 3rem' }}>
+      <section id="valores" style={{ background:T.gray, padding:'clamp(3rem,8vw,7rem) clamp(1.2rem,4vw,3rem)' }}>
         <div style={{ maxWidth:1400, margin:'0 auto' }}>
           <Reveal>
             <div style={{ display:'flex', alignItems:'center', gap:'1rem', marginBottom:'.75rem' }}>
               <div style={{ width:28, height:1, background:T.lime }} />
               <span style={{ color:T.lime, fontSize:'.7rem', letterSpacing:'.22em', fontWeight:500, textTransform:'uppercase' }}>Princípios</span>
             </div>
-            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(3rem,6vw,5.5rem)', lineHeight:.88, margin:'0 0 4rem', letterSpacing:'-.01em' }}>
+            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.5rem,7vw,5.5rem)', lineHeight:.88, margin:'0 0 clamp(2rem,5vw,4rem)', letterSpacing:'-.01em' }}>
               O QUE GUIA<br />CADA DECISÃO
             </h2>
           </Reveal>
 
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:'1px', background:'rgba(255,255,255,.05)' }}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap:'1px', background:'rgba(255,255,255,.05)' }}>
             {[
               { n:'01', title:'CIÊNCIA',      desc:'Cada protocolo é construído sobre evidências científicas, nunca sobre modismos passageiros.', icon:'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
               { n:'02', title:'HONESTIDADE',  desc:'Resultados reais levam tempo. Você vai ouvir a verdade — não o que quer ouvir. Isso é respeito.', icon:'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
@@ -573,33 +565,30 @@ export function Portfolio() {
                 key={v.n}
                 ref={el => { valorRefs.current[i] = el; }}
                 className="tc-card-3d"
-                style={{ background:T.card, padding:'2.8rem 2.5rem', position:'relative', overflow:'hidden' }}
+                style={{ background:T.card, padding:'clamp(1.8rem,4vw,2.8rem) clamp(1.5rem,4vw,2.5rem)', position:'relative', overflow:'hidden' }}
               >
                 <div className="tc-val-bar" style={{ position:'absolute', bottom:0, left:0, right:0, height:2, background:T.lime, transformOrigin:'left', transform:'scaleX(0)' }} />
-                <div style={{ position:'absolute', top:4, right:10, fontFamily:"'Bebas Neue',sans-serif", fontSize:'6rem', color:`${T.lime}0C`, lineHeight:1, userSelect:'none' }}>{v.n}</div>
+                <div style={{ position:'absolute', top:4, right:10, fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(3.5rem,10vw,6rem)', color:`${T.lime}0C`, lineHeight:1, userSelect:'none' }}>{v.n}</div>
                 <div style={{ width:42, height:42, borderRadius:'50%', border:'1px solid rgba(255,255,255,.08)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'1.5rem' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.lime} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={v.icon} /></svg>
                 </div>
                 <div style={{ color:T.lime, fontSize:'.62rem', letterSpacing:'.18em', fontWeight:600, textTransform:'uppercase', marginBottom:'.5rem' }}>{v.n}</div>
-                <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', margin:'0 0 .9rem', letterSpacing:'.02em' }}>{v.title}</h3>
-                <p style={{ fontWeight:300, color:'rgba(242,242,242,.5)', fontSize:'.85rem', lineHeight:1.75, margin:0 }}>{v.desc}</p>
+                <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.4rem,3vw,1.8rem)', margin:'0 0 .9rem', letterSpacing:'.02em' }}>{v.title}</h3>
+                <p style={{ fontWeight:300, color:'rgba(242,242,242,.5)', fontSize:'clamp(.78rem,1.8vw,.85rem)', lineHeight:1.75, margin:0 }}>{v.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── SERVIÇOS — HORIZONTAL SCROLL CAROUSEL ────────────── */}
-      <div id="servicos" ref={srvContRef} className="tc-srv-mob" style={{ height:'300vh', position:'relative' }}>
+      {/* ── SERVIÇOS — DESKTOP: HORIZONTAL SCROLL CAROUSEL ─── */}
+      <div id="servicos" ref={srvContRef} className="tc-srv-desktop" style={{ height:'300vh', position:'relative' }}>
         <div style={{ position:'sticky', top:0, height:'100vh', overflow:'hidden' }}>
-          {/* Horizontal track — 3 × 100vw panels */}
-          <div ref={srvTrackRef} className="tc-srv-track-mob" style={{ display:'flex', width:'300vw', height:'100%', willChange:'transform', transition:'none' }}>
+          <div ref={srvTrackRef} style={{ display:'flex', width:'300vw', height:'100%', willChange:'transform', transition:'none' }}>
 
             {/* Panel 01 — TREINO ONLINE */}
-            <div className="tc-srv-panel tc-srv-panel-mob" style={{ background:T.black, borderRight:'.5px solid rgba(255,255,255,.06)' }}>
-              {/* Giant ghost number */}
-              <div className="tc-srv-ghost" style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>01</div>
-              {/* Diagonal lime accent */}
+            <div className="tc-srv-panel" style={{ background:T.black, borderRight:'.5px solid rgba(255,255,255,.06)' }}>
+              <div style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>01</div>
               <div style={{ position:'absolute', left:'42%', top:0, bottom:0, width:1, background:`linear-gradient(to bottom, transparent, ${T.lime}30, transparent)` }} />
 
               <div style={{ position:'relative', zIndex:2, padding:'0 3rem 4rem', width:'100%', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4rem', alignItems:'flex-end' }}>
@@ -619,7 +608,7 @@ export function Portfolio() {
                     <span className="tc-mag-inner">Saber Mais →</span>
                   </button>
                 </div>
-                <div className="tc-srv-side" style={{ display:'flex', flexDirection:'column', gap:'1.5rem' }}>
+                <div style={{ display:'flex', flexDirection:'column', gap:'1.5rem' }}>
                   {[['Planilha personalizada','Montada com base no seu nível, histórico e objetivos'],['Revisão semanal','Ajustes contínuos para manter o progresso em curva ascendente'],['Suporte diário','WhatsApp aberto para dúvidas, motivação e correções em tempo real']].map(([title,desc]) => (
                     <div key={title} style={{ padding:'1.5rem', border:'.5px solid rgba(255,255,255,.08)', borderRadius:2 }}>
                       <div style={{ color:T.lime, fontSize:'.65rem', letterSpacing:'.18em', fontWeight:600, textTransform:'uppercase', marginBottom:'.4rem' }}>{title}</div>
@@ -631,11 +620,9 @@ export function Portfolio() {
             </div>
 
             {/* Panel 02 — TREINO PRESENCIAL */}
-            <div className="tc-srv-panel tc-srv-panel-mob" style={{ background:'#080808', borderRight:'.5px solid rgba(255,255,255,.06)' }}>
-              <div className="tc-srv-ghost" style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>02</div>
-
-              {/* Image stripe */}
-              <div className="tc-srv-side" style={{ position:'absolute', right:'38%', top:0, bottom:0, width:'28%', overflow:'hidden' }}>
+            <div className="tc-srv-panel" style={{ background:'#080808', borderRight:'.5px solid rgba(255,255,255,.06)' }}>
+              <div style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>02</div>
+              <div style={{ position:'absolute', right:'38%', top:0, bottom:0, width:'28%', overflow:'hidden' }}>
                 <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=900&auto=format&fit=crop&q=85" alt="Treino" style={{ width:'100%', height:'100%', objectFit:'cover', filter:'grayscale(40%)', opacity:.6 }} />
                 <div style={{ position:'absolute', inset:0, background:`linear-gradient(to right, #080808, transparent 30%, transparent 70%, #080808)` }} />
               </div>
@@ -657,7 +644,7 @@ export function Portfolio() {
                     <span className="tc-mag-inner">Saber Mais →</span>
                   </button>
                 </div>
-                <div className="tc-srv-side" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem' }}>
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem' }}>
                   {[['Correção ao vivo','Cada rep executada com técnica perfeita'],['Intensidade ideal','Carga e volume ajustados em tempo real'],['Foco total','Sessão 100% dedicada a você'],['Resultados rápidos','Menos tempo perdido, mais progresso real']].map(([title,desc]) => (
                     <div key={title} style={{ padding:'1.2rem', border:`.5px solid rgba(200,255,0,.15)`, borderRadius:2, background:`${T.lime}05` }}>
                       <div style={{ color:T.lime, fontSize:'.6rem', letterSpacing:'.15em', fontWeight:600, textTransform:'uppercase', marginBottom:'.3rem' }}>{title}</div>
@@ -669,8 +656,8 @@ export function Portfolio() {
             </div>
 
             {/* Panel 03 — CONSULTORIA */}
-            <div className="tc-srv-panel tc-srv-panel-mob" style={{ background:T.gray }}>
-              <div className="tc-srv-ghost" style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>03</div>
+            <div className="tc-srv-panel" style={{ background:T.gray }}>
+              <div style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>03</div>
 
               <div style={{ position:'relative', zIndex:2, padding:'0 3rem 4rem', width:'100%', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4rem', alignItems:'flex-end' }}>
                 <div>
@@ -690,8 +677,7 @@ export function Portfolio() {
                   </button>
                 </div>
 
-                {/* Metrics */}
-                <div className="tc-srv-side" style={{ display:'flex', flexDirection:'column', gap:'1px', background:'rgba(255,255,255,.06)' }}>
+                <div style={{ display:'flex', flexDirection:'column', gap:'1px', background:'rgba(255,255,255,.06)' }}>
                   {[['−12kg','resultado médio em 90 dias'],['98%','taxa de satisfação dos alunos'],['Semanal','check-in com revisão de dados'],['24h','tempo médio de resposta'],].map(([val,desc]) => (
                     <div key={val} style={{ background:T.card, padding:'1.4rem 2rem', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                       <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2.2rem', color:T.lime }}>{val}</span>
@@ -703,33 +689,103 @@ export function Portfolio() {
             </div>
           </div>
 
-          {/* Progress dots */}
-          <div ref={srvDotsRef} className="tc-srv-dots-mob" style={{ position:'absolute', bottom:'2.5rem', left:'50%', transform:'translateX(-50%)', display:'flex', gap:'.5rem', alignItems:'center', zIndex:10 }}>
+          <div ref={srvDotsRef} style={{ position:'absolute', bottom:'2.5rem', left:'50%', transform:'translateX(-50%)', display:'flex', gap:'.5rem', alignItems:'center', zIndex:10 }}>
             {[0,1,2].map(i => (
               <div key={i} style={{ height:4, borderRadius:2, background:T.lime, transition:'all .35s ease', opacity: i===0?1:.3, width: i===0?'28px':'8px' }} />
             ))}
           </div>
 
-          {/* Section label */}
-          <div className="tc-srv-label-mob" style={{ position:'absolute', top:'2.5rem', left:'3rem', zIndex:10 }}>
+          <div style={{ position:'absolute', top:'2.5rem', left:'3rem', zIndex:10 }}>
             <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'.85rem', letterSpacing:'.25em', color:'rgba(255,255,255,.25)', textTransform:'uppercase' }}>Serviços</span>
           </div>
 
-          {/* Scroll hint */}
-          <div className="tc-srv-hint-mob" style={{ position:'absolute', bottom:'2.5rem', right:'3rem', zIndex:10, display:'flex', alignItems:'center', gap:'.5rem' }}>
+          <div style={{ position:'absolute', bottom:'2.5rem', right:'3rem', zIndex:10, display:'flex', alignItems:'center', gap:'.5rem' }}>
             <span style={{ fontSize:'.6rem', letterSpacing:'.2em', color:'rgba(255,255,255,.25)', textTransform:'uppercase' }}>Role para navegar</span>
             <div style={{ width:24, height:1, background:'rgba(255,255,255,.2)' }} />
           </div>
         </div>
       </div>
 
+      {/* ── SERVIÇOS — MOBILE: VERTICAL STACK ───────────────── */}
+      <div className="tc-srv-mobile" style={{ display:'none' }}>
+        {[
+          {
+            n:'01', tag:'Remoto', title:'TREINO\nONLINE',
+            desc:'Planilha 100% personalizada, revisada semanalmente com base no seu progresso. Suporte diário via WhatsApp — você nunca vai treinar sozinho.',
+            features:[['Planilha personalizada','Montada com base no seu nível, histórico e objetivos'],['Revisão semanal','Ajustes contínuos para manter o progresso em curva ascendente'],['Suporte diário','WhatsApp aberto para dúvidas, motivação e correções em tempo real']],
+            bg:T.black
+          },
+          {
+            n:'02', tag:'Presencial', title:'TREINO\nPRESENCIAL',
+            desc:'Sessões individuais com execução supervisionada, correção biomecânica em tempo real e intensidade calibrada ao seu nível exato.',
+            features:[['Correção ao vivo','Cada rep executada com técnica perfeita'],['Intensidade ideal','Carga e volume ajustados em tempo real'],['Foco total','Sessão 100% dedicada a você'],['Resultados rápidos','Menos tempo perdido, mais progresso real']],
+            bg:'#080808',
+            img:'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=900&auto=format&fit=crop&q=85'
+          },
+          {
+            n:'03', tag:'Pacote', title:'CONSULTORIA\nDE\nEMAGRECIMENTO',
+            desc:'Protocolo completo com rastreamento de métricas semanais, ajuste de treino e nutrição e acompanhamento contínuo baseado em dados reais.',
+            metrics:[['−12kg','resultado médio em 90 dias'],['98%','taxa de satisfação dos alunos'],['Semanal','check-in com revisão de dados'],['24h','tempo médio de resposta']],
+            bg:T.gray
+          },
+        ].map((s, idx) => (
+          <section key={s.n} id={idx===0?'servicos':undefined} style={{ background:s.bg, padding:'5rem clamp(1.2rem,4vw,3rem) clamp(3rem,6vw,5rem)', position:'relative', overflow:'hidden', minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'flex-end' }}>
+            <div style={{ position:'absolute', top:'50%', right:'1rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'40vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>{s.n}</div>
+            {s.img && (
+              <div style={{ position:'absolute', right:'0', top:'15%', bottom:'30%', width:'40%', overflow:'hidden', opacity:.4 }}>
+                <img src={s.img} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', filter:'grayscale(40%)' }} />
+                <div style={{ position:'absolute', inset:0, background:`linear-gradient(to right, ${s.bg}, transparent 50%)` }} />
+              </div>
+            )}
+
+            <div style={{ position:'relative', zIndex:2 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'1.2rem' }}>
+                <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1rem', color:T.lime }}>{s.n}</span>
+                <div style={{ flex:1, height:'.5px', background:'rgba(255,255,255,.15)' }} />
+                <span style={{ fontSize:'.6rem', letterSpacing:'.2em', color:'rgba(255,255,255,.4)', textTransform:'uppercase' }}>{s.tag}</span>
+              </div>
+              <h2 className="tc-srv-h" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,10vw,5rem)', lineHeight:.88, margin:'0 0 1.5rem', letterSpacing:'-.01em', whiteSpace:'pre-line' }}>
+                {s.title}
+              </h2>
+              <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', fontSize:'clamp(.85rem,2.5vw,1rem)', lineHeight:1.75, maxWidth:500, margin:'0 0 2rem' }}>
+                {s.desc}
+              </p>
+              <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.85rem 1.8rem', fontSize:'.7rem', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, marginBottom:'2rem' }}>
+                <span className="tc-mag-inner">Saber Mais →</span>
+              </button>
+
+              {'features' in s && s.features && (
+                <div style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
+                  {s.features.map(([title,desc]) => (
+                    <div key={title} style={{ padding:'1.2rem', border:'.5px solid rgba(255,255,255,.08)', borderRadius:2 }}>
+                      <div style={{ color:T.lime, fontSize:'.6rem', letterSpacing:'.18em', fontWeight:600, textTransform:'uppercase', marginBottom:'.3rem' }}>{title}</div>
+                      <div style={{ fontWeight:300, color:'rgba(242,242,242,.5)', fontSize:'.8rem', lineHeight:1.6 }}>{desc}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {'metrics' in s && s.metrics && (
+                <div style={{ display:'flex', flexDirection:'column', gap:'1px', background:'rgba(255,255,255,.06)', borderRadius:2, overflow:'hidden' }}>
+                  {s.metrics.map(([val,desc]) => (
+                    <div key={val} style={{ background:T.card, padding:'1.2rem 1.5rem', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                      <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.5rem,5vw,2.2rem)', color:T.lime }}>{val}</span>
+                      <span style={{ fontWeight:300, color:'rgba(242,242,242,.45)', fontSize:'.75rem', textAlign:'right', maxWidth:160 }}>{desc}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        ))}
+      </div>
+
       {/* ── PROCESSO ─────────────────────────────────────────── */}
-      <section className="tc-processo-mob" style={{ background:T.gray, padding:'7rem 3rem' }}>
+      <section style={{ background:T.gray, padding:'clamp(3rem,8vw,7rem) clamp(1.2rem,4vw,3rem)' }}>
         <div style={{ maxWidth:1400, margin:'0 auto' }}>
           <Reveal>
-            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,6vw,5rem)', lineHeight:.88, margin:'0 0 4rem', letterSpacing:'-.01em' }}>O PROCESSO</h2>
+            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.2rem,7vw,5rem)', lineHeight:.88, margin:'0 0 clamp(2rem,5vw,4rem)', letterSpacing:'-.01em' }}>O PROCESSO</h2>
           </Reveal>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(210px,1fr))', gap:'1px', background:'rgba(255,255,255,.05)' }}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(210px,100%),1fr))', gap:'1px', background:'rgba(255,255,255,.05)' }}>
             {[
               { n:'01', title:'AVALIAÇÃO',    desc:'Análise completa do seu biotipo, histórico de saúde e objetivos reais.', icon:'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
               { n:'02', title:'PLANEJAMENTO', desc:'Protocolo 100% individualizado, com cargas e fases calculadas.', icon:'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
@@ -737,13 +793,13 @@ export function Portfolio() {
               { n:'04', title:'RESULTADOS',   desc:'Ajustes semanais baseados em dados reais de evolução contínua.', icon:'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' },
             ].map((s, i) => (
               <Reveal key={s.n} delay={i*80}>
-                <div style={{ background:T.card, padding:'2.5rem', position:'relative', overflow:'hidden', height:'100%' }}>
-                  <div style={{ position:'absolute', top:4, right:10, fontFamily:"'Bebas Neue',sans-serif", fontSize:'5.5rem', color:`${T.lime}0B`, lineHeight:1, userSelect:'none' }}>{s.n}</div>
+                <div style={{ background:T.card, padding:'clamp(1.5rem,4vw,2.5rem)', position:'relative', overflow:'hidden', height:'100%' }}>
+                  <div style={{ position:'absolute', top:4, right:10, fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(3.5rem,10vw,5.5rem)', color:`${T.lime}0B`, lineHeight:1, userSelect:'none' }}>{s.n}</div>
                   <div style={{ width:42, height:42, borderRadius:'50%', border:'1px solid rgba(255,255,255,.08)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'1.5rem' }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.lime} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={s.icon} /></svg>
                   </div>
-                  <h4 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', margin:'0 0 .7rem' }}>{s.title}</h4>
-                  <p style={{ fontWeight:300, color:'rgba(242,242,242,.45)', fontSize:'.84rem', lineHeight:1.7, margin:0 }}>{s.desc}</p>
+                  <h4 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.3rem,3vw,1.6rem)', margin:'0 0 .7rem' }}>{s.title}</h4>
+                  <p style={{ fontWeight:300, color:'rgba(242,242,242,.45)', fontSize:'clamp(.75rem,1.8vw,.84rem)', lineHeight:1.7, margin:0 }}>{s.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -752,8 +808,8 @@ export function Portfolio() {
       </section>
 
       {/* ── AGENDAR ──────────────────────────────────────────── */}
-      <section id="agendar" className="tc-agendar-mob" style={{ background:T.black, padding:'7rem 3rem', borderTop:'.5px solid rgba(255,255,255,.06)' }}>
-        <div style={{ maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:'5rem', alignItems:'start' }}>
+      <section id="agendar" style={{ background:T.black, padding:'clamp(3rem,8vw,7rem) clamp(1.2rem,4vw,3rem)', borderTop:'.5px solid rgba(255,255,255,.06)' }}>
+        <div style={{ maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(300px,100%),1fr))', gap:'clamp(2rem,5vw,5rem)', alignItems:'start' }}>
           <div>
             <Reveal>
               <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'1.5rem' }}>
@@ -762,21 +818,20 @@ export function Portfolio() {
               </div>
             </Reveal>
 
-            {/* Char-reveal heading */}
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(3.5rem,6vw,5.5rem)', lineHeight:.88, letterSpacing:'-.01em', marginBottom:'.3rem' }}>
+            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.5rem,8vw,5.5rem)', lineHeight:.88, letterSpacing:'-.01em', marginBottom:'.3rem' }}>
               <div ref={agendarH1Ref} />
             </div>
-            <div className="tc-outline-lime" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(3.5rem,6vw,5.5rem)', lineHeight:.88, letterSpacing:'-.01em', marginBottom:'2rem' }}>
+            <div className="tc-outline-lime" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.5rem,8vw,5.5rem)', lineHeight:.88, letterSpacing:'-.01em', marginBottom:'2rem' }}>
               <div ref={agendarH2Ref} />
             </div>
 
             <Reveal delay={100}>
-              <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', lineHeight:1.8, fontSize:'1rem', maxWidth:400, marginBottom:'2rem' }}>
+              <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', lineHeight:1.8, fontSize:'clamp(.85rem,2vw,1rem)', maxWidth:400, marginBottom:'2rem' }}>
                 Uma conversa de 30 minutos para entender sua rotina, seu histórico e seus objetivos. Sem compromisso. Só clareza.
               </p>
               <div style={{ display:'flex', flexDirection:'column', gap:'.7rem' }}>
                 {['Avaliação 100% gratuita e sem compromisso','Resposta em até 24h via WhatsApp','Presencial (São Paulo) ou online'].map(item => (
-                  <div key={item} style={{ display:'flex', alignItems:'center', gap:'.7rem', fontSize:'.85rem', color:'rgba(242,242,242,.55)', fontWeight:300 }}>
+                  <div key={item} style={{ display:'flex', alignItems:'center', gap:'.7rem', fontSize:'clamp(.75rem,2vw,.85rem)', color:'rgba(242,242,242,.55)', fontWeight:300 }}>
                     <div style={{ width:5, height:5, borderRadius:'50%', background:T.lime, flexShrink:0 }} />
                     {item}
                   </div>
@@ -786,9 +841,9 @@ export function Portfolio() {
           </div>
 
           <Reveal delay={150}>
-            <form className="tc-form-mob" onSubmit={e=>e.preventDefault()} style={{ display:'flex', flexDirection:'column', gap:'.9rem', background:T.card, padding:'2.5rem', border:'.5px solid rgba(255,255,255,.07)', borderRadius:2 }}>
+            <form onSubmit={e=>e.preventDefault()} style={{ display:'flex', flexDirection:'column', gap:'.9rem', background:T.card, padding:'clamp(1.5rem,4vw,2.5rem)', border:'.5px solid rgba(255,255,255,.07)', borderRadius:2 }}>
               <div style={{ marginBottom:'.4rem' }}>
-                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.45rem', marginBottom:'.2rem' }}>Preencha os dados</div>
+                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.2rem,3vw,1.45rem)', marginBottom:'.2rem' }}>Preencha os dados</div>
                 <div style={{ fontSize:'.75rem', color:'rgba(242,242,242,.35)', fontWeight:300 }}>Thales entrará em contato em até 24h.</div>
               </div>
               <input className="tc-input" type="text"  placeholder="Seu nome completo" />
@@ -815,12 +870,12 @@ export function Portfolio() {
       </section>
 
       {/* ── DEPOIMENTOS ──────────────────────────────────────── */}
-      <section id="depoimentos" className="tc-depo-mob" style={{ background:T.gray, padding:'7rem 3rem' }}>
-        <div style={{ maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:'4rem', alignItems:'center' }}>
+      <section id="depoimentos" style={{ background:T.gray, padding:'clamp(3rem,8vw,7rem) clamp(1.2rem,4vw,3rem)' }}>
+        <div style={{ maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(300px,100%),1fr))', gap:'clamp(2rem,5vw,4rem)', alignItems:'center' }}>
           <Reveal>
-            <div style={{ background:T.card, padding:'3.5rem', border:'.5px solid rgba(255,255,255,.06)', borderRadius:2, position:'relative', overflow:'hidden' }}>
+            <div style={{ background:T.card, padding:'clamp(2rem,5vw,3.5rem)', border:'.5px solid rgba(255,255,255,.06)', borderRadius:2, position:'relative', overflow:'hidden' }}>
               <div style={{ position:'absolute', top:'.5rem', left:'1.5rem', fontFamily:"'Bebas Neue',sans-serif", fontSize:'7rem', color:`${T.lime}15`, lineHeight:1, userSelect:'none' }}>"</div>
-              <p style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.3rem,2.5vw,1.9rem)', fontStyle:'italic', lineHeight:1.3, marginBottom:'2rem', position:'relative' }}>
+              <p style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.1rem,3vw,1.9rem)', fontStyle:'italic', lineHeight:1.3, marginBottom:'2rem', position:'relative' }}>
                 Nunca achei que fosse gostar de treinar, mas o Thales mudou completamente minha mentalidade. O resultado estético foi consequência de um processo incrível.
               </p>
               <div style={{ display:'flex', alignItems:'center', gap:'1rem' }}>
@@ -836,11 +891,11 @@ export function Portfolio() {
           </Reveal>
 
           <Reveal delay={150}>
-            <div className="tc-depo-stats-mob" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1px', background:'rgba(255,255,255,.05)' }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(140px,100%),1fr))', gap:'1px', background:'rgba(255,255,255,.05)' }}>
               {[['−12kg','Ana em 4 meses'],['+200%','Energia diária'],['98%','Satisfação geral'],['3×','Mais força em 60 dias']].map(([stat,label]) => (
-                <div key={stat} style={{ background:T.card, padding:'2.2rem 2rem', borderLeft:`2px solid ${T.lime}` }}>
-                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.2rem,3.5vw,3rem)', color:T.white, lineHeight:1, marginBottom:'.4rem' }}>{stat}</div>
-                  <div style={{ color:T.lime, fontSize:'.62rem', letterSpacing:'.14em', textTransform:'uppercase', fontWeight:600 }}>{label}</div>
+                <div key={stat} style={{ background:T.card, padding:'clamp(1.5rem,4vw,2.2rem) clamp(1.2rem,3vw,2rem)', borderLeft:`2px solid ${T.lime}` }}>
+                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.8rem,5vw,3rem)', color:T.white, lineHeight:1, marginBottom:'.4rem' }}>{stat}</div>
+                  <div style={{ color:T.lime, fontSize:'clamp(.55rem,1.3vw,.62rem)', letterSpacing:'.14em', textTransform:'uppercase', fontWeight:600 }}>{label}</div>
                 </div>
               ))}
             </div>
@@ -849,13 +904,13 @@ export function Portfolio() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="tc-cta-mob" style={{ background:T.lime, padding:'8rem 3rem', textAlign:'center' }}>
+      <section style={{ background:T.lime, padding:'clamp(4rem,10vw,8rem) clamp(1.2rem,4vw,3rem)', textAlign:'center' }}>
         <Reveal>
-          <h2 style={{ fontFamily:"'Montserrat',sans-serif", fontWeight:900, fontSize:'clamp(3.5rem,10vw,8rem)', lineHeight:.88, color:T.black, margin:'0 0 1.5rem', letterSpacing:'-.03em' }}>
+          <h2 style={{ fontFamily:"'Montserrat',sans-serif", fontWeight:900, fontSize:'clamp(2.8rem,10vw,8rem)', lineHeight:.88, color:T.black, margin:'0 0 1.5rem', letterSpacing:'-.03em' }}>
             PRONTO PARA<br />MUDAR?
           </h2>
-          <p style={{ fontWeight:300, color:'rgba(6,6,6,.6)', fontSize:'1.1rem', marginBottom:'3rem' }}>Avaliação gratuita. Sem compromisso. Apenas resultados.</p>
-          <button className="tc-mag" style={{ background:T.black, color:T.white, border:'none', padding:'1.1rem 2.5rem', fontSize:'.8rem', fontWeight:700, letterSpacing:'.18em', textTransform:'uppercase', borderRadius:2, cursor:'none', display:'inline-flex', alignItems:'center', gap:'.75rem' }}>
+          <p style={{ fontWeight:300, color:'rgba(6,6,6,.6)', fontSize:'clamp(.9rem,2.5vw,1.1rem)', marginBottom:'clamp(2rem,5vw,3rem)' }}>Avaliação gratuita. Sem compromisso. Apenas resultados.</p>
+          <button className="tc-mag" style={{ background:T.black, color:T.white, border:'none', padding:'clamp(.9rem,2vw,1.1rem) clamp(1.8rem,4vw,2.5rem)', fontSize:'clamp(.7rem,1.8vw,.8rem)', fontWeight:700, letterSpacing:'.18em', textTransform:'uppercase', borderRadius:2, cursor:'none', display:'inline-flex', alignItems:'center', gap:'.75rem' }}>
             <span className="tc-mag-inner" style={{ display:'flex', alignItems:'center', gap:'.75rem' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill={T.lime}><path d="M12.031 0C5.38 0 0 5.383 0 12.033c0 2.651.687 5.234 1.996 7.514L.15 24l4.607-1.815a11.968 11.968 0 0 0 7.274 2.417c6.65 0 12.03-5.383 12.03-12.035C24.06 5.383 18.681 0 12.031 0zm5.405 16.537c-.296-.148-1.758-.87-2.03-.97-.272-.102-.47-.148-.667.148-.198.297-.768.97-.94 1.168-.173.198-.346.223-.643.074-.296-.148-1.254-.462-2.39-1.464-.883-.78-1.478-1.745-1.651-2.043-.173-.296-.018-.458.13-.606.134-.133.296-.346.445-.52.148-.173.198-.296.296-.494.099-.198.05-.371-.024-.52-.074-.148-.667-1.606-.914-2.198-.241-.578-.485-.5-.667-.51h-.568c-.198 0-.52.074-.79.371-.272.296-1.038 1.013-1.038 2.47 0 1.458 1.063 2.868 1.21 3.065.149.198 2.09 3.19 5.064 4.475 2.973 1.285 2.973.856 3.516.808.544-.05 1.758-.718 2.006-1.41.247-.692.247-1.285.173-1.41-.074-.124-.272-.198-.568-.346z"/></svg>
               Falar com Thales
@@ -865,10 +920,10 @@ export function Portfolio() {
       </section>
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
-      <footer className="tc-footer-mob" style={{ background:T.black, padding:'5rem 3rem 2.5rem', borderTop:'.5px solid rgba(255,255,255,.06)' }}>
-        <div style={{ maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))', gap:'3rem', marginBottom:'3rem' }}>
+      <footer style={{ background:T.black, padding:'clamp(3rem,8vw,5rem) clamp(1.2rem,4vw,3rem) clamp(1.5rem,4vw,2.5rem)', borderTop:'.5px solid rgba(255,255,255,.06)' }}>
+        <div style={{ maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(180px,100%),1fr))', gap:'clamp(2rem,4vw,3rem)', marginBottom:'3rem' }}>
           <div>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2.2rem', marginBottom:'.5rem' }}>THALES COELHO PT</div>
+            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.6rem,4vw,2.2rem)', marginBottom:'.5rem' }}>THALES COELHO PT</div>
             <p style={{ color:'rgba(242,242,242,.3)', fontWeight:300, fontSize:'.85rem', lineHeight:1.7, maxWidth:260 }}>Elevando padrões. Transformando corpos. Construindo mentalidades inabaláveis.</p>
           </div>
           <div style={{ display:'flex', flexDirection:'column', gap:'.7rem' }}>
