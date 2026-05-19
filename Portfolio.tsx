@@ -63,8 +63,6 @@ option{background:${T.black}}
   .tc-hamburger{display:flex!important}
   .tc-desktop-nav{display:none!important}
   .tc-desktop-cta{display:none!important}
-  .tc-srv-desktop{display:none!important}
-  .tc-srv-mobile{display:block!important}
   *{cursor:auto!important}
 }
 `;
@@ -295,8 +293,8 @@ export function Portfolio() {
         bar.style.transform = `scaleX(${p})`;
       });
 
-      // ── Services horizontal carousel (desktop only) ──────────
-      if (!isMobile && srvContRef.current && srvTrackRef.current) {
+      // ── Services horizontal carousel ─────────────────────────
+      if (srvContRef.current && srvTrackRef.current) {
         const rect = srvContRef.current.getBoundingClientRect();
         const scrollable = srvContRef.current.offsetHeight - winH;
         const p = Math.max(0, Math.min(1, -rect.top / scrollable));
@@ -581,38 +579,38 @@ export function Portfolio() {
         </div>
       </section>
 
-      {/* ── SERVIÇOS — DESKTOP: HORIZONTAL SCROLL CAROUSEL ─── */}
-      <div id="servicos" ref={srvContRef} className="tc-srv-desktop" style={{ height:'300vh', position:'relative' }}>
+      {/* ── SERVIÇOS — HORIZONTAL SCROLL CAROUSEL ────────────── */}
+      <div id="servicos" ref={srvContRef} style={{ height:'300vh', position:'relative' }}>
         <div style={{ position:'sticky', top:0, height:'100vh', overflow:'hidden' }}>
           <div ref={srvTrackRef} style={{ display:'flex', width:'300vw', height:'100%', willChange:'transform', transition:'none' }}>
 
             {/* Panel 01 — TREINO ONLINE */}
             <div className="tc-srv-panel" style={{ background:T.black, borderRight:'.5px solid rgba(255,255,255,.06)' }}>
-              <div style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>01</div>
+              <div style={{ position:'absolute', top:'50%', right:'clamp(1rem,5vw,4rem)', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(15vw,28vw,28vw)', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>01</div>
               <div style={{ position:'absolute', left:'42%', top:0, bottom:0, width:1, background:`linear-gradient(to bottom, transparent, ${T.lime}30, transparent)` }} />
 
-              <div style={{ position:'relative', zIndex:2, padding:'0 3rem 4rem', width:'100%', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4rem', alignItems:'flex-end' }}>
+              <div style={{ position:'relative', zIndex:2, padding:'0 clamp(1.2rem,4vw,3rem) clamp(3rem,6vw,4rem)', width:'100%', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(280px,100%),1fr))', gap:'clamp(1.5rem,4vw,4rem)', alignItems:'flex-end' }}>
                 <div>
-                  <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'1.5rem' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'1.2rem' }}>
                     <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1rem', color:T.lime }}>01</span>
                     <div style={{ flex:1, height:'.5px', background:'rgba(255,255,255,.15)' }} />
                     <span style={{ fontSize:'.6rem', letterSpacing:'.2em', color:'rgba(255,255,255,.4)', textTransform:'uppercase' }}>Remoto</span>
                   </div>
-                  <h2 className="tc-srv-h" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(4rem,8vw,8rem)', lineHeight:.88, margin:'0 0 2rem', letterSpacing:'-.01em' }}>
+                  <h2 className="tc-srv-h" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,8vw,8rem)', lineHeight:.88, margin:'0 0 clamp(1rem,3vw,2rem)', letterSpacing:'-.01em' }}>
                     TREINO<br />ONLINE
                   </h2>
-                  <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', fontSize:'1rem', lineHeight:1.75, maxWidth:400, margin:'0 0 2.5rem' }}>
+                  <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', fontSize:'clamp(.85rem,2vw,1rem)', lineHeight:1.75, maxWidth:400, margin:'0 0 clamp(1.5rem,4vw,2.5rem)' }}>
                     Planilha 100% personalizada, revisada semanalmente com base no seu progresso. Suporte diário via WhatsApp — você nunca vai treinar sozinho.
                   </p>
-                  <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.95rem 2.2rem', fontSize:'.72rem', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
+                  <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.85rem clamp(1.5rem,3vw,2.2rem)', fontSize:'clamp(.65rem,1.5vw,.72rem)', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
                     <span className="tc-mag-inner">Saber Mais →</span>
                   </button>
                 </div>
-                <div style={{ display:'flex', flexDirection:'column', gap:'1.5rem' }}>
+                <div style={{ display:'flex', flexDirection:'column', gap:'clamp(.8rem,2vw,1.5rem)' }}>
                   {[['Planilha personalizada','Montada com base no seu nível, histórico e objetivos'],['Revisão semanal','Ajustes contínuos para manter o progresso em curva ascendente'],['Suporte diário','WhatsApp aberto para dúvidas, motivação e correções em tempo real']].map(([title,desc]) => (
-                    <div key={title} style={{ padding:'1.5rem', border:'.5px solid rgba(255,255,255,.08)', borderRadius:2 }}>
-                      <div style={{ color:T.lime, fontSize:'.65rem', letterSpacing:'.18em', fontWeight:600, textTransform:'uppercase', marginBottom:'.4rem' }}>{title}</div>
-                      <div style={{ fontWeight:300, color:'rgba(242,242,242,.5)', fontSize:'.82rem', lineHeight:1.6 }}>{desc}</div>
+                    <div key={title} style={{ padding:'clamp(.8rem,2vw,1.5rem)', border:'.5px solid rgba(255,255,255,.08)', borderRadius:2 }}>
+                      <div style={{ color:T.lime, fontSize:'clamp(.55rem,1.3vw,.65rem)', letterSpacing:'.18em', fontWeight:600, textTransform:'uppercase', marginBottom:'.3rem' }}>{title}</div>
+                      <div style={{ fontWeight:300, color:'rgba(242,242,242,.5)', fontSize:'clamp(.75rem,1.8vw,.82rem)', lineHeight:1.6 }}>{desc}</div>
                     </div>
                   ))}
                 </div>
@@ -621,34 +619,34 @@ export function Portfolio() {
 
             {/* Panel 02 — TREINO PRESENCIAL */}
             <div className="tc-srv-panel" style={{ background:'#080808', borderRight:'.5px solid rgba(255,255,255,.06)' }}>
-              <div style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>02</div>
-              <div style={{ position:'absolute', right:'38%', top:0, bottom:0, width:'28%', overflow:'hidden' }}>
+              <div style={{ position:'absolute', top:'50%', right:'clamp(1rem,5vw,4rem)', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(15vw,28vw,28vw)', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>02</div>
+              <div style={{ position:'absolute', right:'clamp(20%,38%,38%)', top:0, bottom:0, width:'clamp(30%,28%,28%)', overflow:'hidden' }}>
                 <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=900&auto=format&fit=crop&q=85" alt="Treino" style={{ width:'100%', height:'100%', objectFit:'cover', filter:'grayscale(40%)', opacity:.6 }} />
                 <div style={{ position:'absolute', inset:0, background:`linear-gradient(to right, #080808, transparent 30%, transparent 70%, #080808)` }} />
               </div>
 
-              <div style={{ position:'relative', zIndex:2, padding:'0 3rem 4rem', width:'100%', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4rem', alignItems:'flex-end' }}>
+              <div style={{ position:'relative', zIndex:2, padding:'0 clamp(1.2rem,4vw,3rem) clamp(3rem,6vw,4rem)', width:'100%', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(280px,100%),1fr))', gap:'clamp(1.5rem,4vw,4rem)', alignItems:'flex-end' }}>
                 <div>
-                  <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'1.5rem' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'1.2rem' }}>
                     <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1rem', color:T.lime }}>02</span>
                     <div style={{ flex:1, height:'.5px', background:'rgba(255,255,255,.15)' }} />
                     <span style={{ fontSize:'.6rem', letterSpacing:'.2em', color:'rgba(255,255,255,.4)', textTransform:'uppercase' }}>Presencial</span>
                   </div>
-                  <h2 className="tc-srv-h" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(4rem,8vw,8rem)', lineHeight:.88, margin:'0 0 2rem', letterSpacing:'-.01em' }}>
+                  <h2 className="tc-srv-h" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,8vw,8rem)', lineHeight:.88, margin:'0 0 clamp(1rem,3vw,2rem)', letterSpacing:'-.01em' }}>
                     TREINO<br />PRESENCIAL
                   </h2>
-                  <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', fontSize:'1rem', lineHeight:1.75, maxWidth:400, margin:'0 0 2.5rem' }}>
+                  <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', fontSize:'clamp(.85rem,2vw,1rem)', lineHeight:1.75, maxWidth:400, margin:'0 0 clamp(1.5rem,4vw,2.5rem)' }}>
                     Sessões individuais com execução supervisionada, correção biomecânica em tempo real e intensidade calibrada ao seu nível exato.
                   </p>
-                  <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.95rem 2.2rem', fontSize:'.72rem', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
+                  <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.85rem clamp(1.5rem,3vw,2.2rem)', fontSize:'clamp(.65rem,1.5vw,.72rem)', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
                     <span className="tc-mag-inner">Saber Mais →</span>
                   </button>
                 </div>
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem' }}>
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(140px,100%),1fr))', gap:'clamp(.6rem,1.5vw,1rem)' }}>
                   {[['Correção ao vivo','Cada rep executada com técnica perfeita'],['Intensidade ideal','Carga e volume ajustados em tempo real'],['Foco total','Sessão 100% dedicada a você'],['Resultados rápidos','Menos tempo perdido, mais progresso real']].map(([title,desc]) => (
-                    <div key={title} style={{ padding:'1.2rem', border:`.5px solid rgba(200,255,0,.15)`, borderRadius:2, background:`${T.lime}05` }}>
-                      <div style={{ color:T.lime, fontSize:'.6rem', letterSpacing:'.15em', fontWeight:600, textTransform:'uppercase', marginBottom:'.3rem' }}>{title}</div>
-                      <div style={{ fontWeight:300, color:'rgba(242,242,242,.5)', fontSize:'.78rem', lineHeight:1.55 }}>{desc}</div>
+                    <div key={title} style={{ padding:'clamp(.8rem,2vw,1.2rem)', border:`.5px solid rgba(200,255,0,.15)`, borderRadius:2, background:`${T.lime}05` }}>
+                      <div style={{ color:T.lime, fontSize:'clamp(.5rem,1.2vw,.6rem)', letterSpacing:'.15em', fontWeight:600, textTransform:'uppercase', marginBottom:'.25rem' }}>{title}</div>
+                      <div style={{ fontWeight:300, color:'rgba(242,242,242,.5)', fontSize:'clamp(.7rem,1.6vw,.78rem)', lineHeight:1.55 }}>{desc}</div>
                     </div>
                   ))}
                 </div>
@@ -657,31 +655,31 @@ export function Portfolio() {
 
             {/* Panel 03 — CONSULTORIA */}
             <div className="tc-srv-panel" style={{ background:T.gray }}>
-              <div style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>03</div>
+              <div style={{ position:'absolute', top:'50%', right:'clamp(1rem,5vw,4rem)', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(15vw,28vw,28vw)', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>03</div>
 
-              <div style={{ position:'relative', zIndex:2, padding:'0 3rem 4rem', width:'100%', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4rem', alignItems:'flex-end' }}>
+              <div style={{ position:'relative', zIndex:2, padding:'0 clamp(1.2rem,4vw,3rem) clamp(3rem,6vw,4rem)', width:'100%', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(280px,100%),1fr))', gap:'clamp(1.5rem,4vw,4rem)', alignItems:'flex-end' }}>
                 <div>
-                  <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'1.5rem' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'1.2rem' }}>
                     <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1rem', color:T.lime }}>03</span>
                     <div style={{ flex:1, height:'.5px', background:'rgba(255,255,255,.15)' }} />
                     <span style={{ fontSize:'.6rem', letterSpacing:'.2em', color:'rgba(255,255,255,.4)', textTransform:'uppercase' }}>Pacote</span>
                   </div>
-                  <h2 className="tc-srv-h" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(3rem,7vw,7rem)', lineHeight:.88, margin:'0 0 2rem', letterSpacing:'-.01em' }}>
+                  <h2 className="tc-srv-h" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.2rem,7vw,7rem)', lineHeight:.88, margin:'0 0 clamp(1rem,3vw,2rem)', letterSpacing:'-.01em' }}>
                     CONSULTORIA<br />DE<br />EMAGRECIMENTO
                   </h2>
-                  <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', fontSize:'1rem', lineHeight:1.75, maxWidth:400, margin:'0 0 2.5rem' }}>
+                  <p style={{ fontWeight:300, color:'rgba(242,242,242,.6)', fontSize:'clamp(.85rem,2vw,1rem)', lineHeight:1.75, maxWidth:400, margin:'0 0 clamp(1.5rem,4vw,2.5rem)' }}>
                     Protocolo completo com rastreamento de métricas semanais, ajuste de treino e nutrição e acompanhamento contínuo baseado em dados reais.
                   </p>
-                  <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.95rem 2.2rem', fontSize:'.72rem', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
+                  <button className="tc-mag" style={{ background:T.lime, color:T.black, border:'none', padding:'.85rem clamp(1.5rem,3vw,2.2rem)', fontSize:'clamp(.65rem,1.5vw,.72rem)', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', borderRadius:2, cursor:'none' }}>
                     <span className="tc-mag-inner">Saber Mais →</span>
                   </button>
                 </div>
 
-                <div style={{ display:'flex', flexDirection:'column', gap:'1px', background:'rgba(255,255,255,.06)' }}>
+                <div style={{ display:'flex', flexDirection:'column', gap:'1px', background:'rgba(255,255,255,.06)', borderRadius:2, overflow:'hidden' }}>
                   {[['−12kg','resultado médio em 90 dias'],['98%','taxa de satisfação dos alunos'],['Semanal','check-in com revisão de dados'],['24h','tempo médio de resposta'],].map(([val,desc]) => (
-                    <div key={val} style={{ background:T.card, padding:'1.4rem 2rem', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                      <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2.2rem', color:T.lime }}>{val}</span>
-                      <span style={{ fontWeight:300, color:'rgba(242,242,242,.45)', fontSize:'.8rem', textAlign:'right', maxWidth:200 }}>{desc}</span>
+                    <div key={val} style={{ background:T.card, padding:'clamp(.8rem,2vw,1.4rem) clamp(1rem,3vw,2rem)', display:'flex', alignItems:'center', justifyContent:'space-between', gap:'.5rem' }}>
+                      <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.4rem,4vw,2.2rem)', color:T.lime, whiteSpace:'nowrap' }}>{val}</span>
+                      <span style={{ fontWeight:300, color:'rgba(242,242,242,.45)', fontSize:'clamp(.7rem,1.6vw,.8rem)', textAlign:'right' }}>{desc}</span>
                     </div>
                   ))}
                 </div>
@@ -689,18 +687,18 @@ export function Portfolio() {
             </div>
           </div>
 
-          <div ref={srvDotsRef} style={{ position:'absolute', bottom:'2.5rem', left:'50%', transform:'translateX(-50%)', display:'flex', gap:'.5rem', alignItems:'center', zIndex:10 }}>
+          <div ref={srvDotsRef} style={{ position:'absolute', bottom:'clamp(1.5rem,4vw,2.5rem)', left:'50%', transform:'translateX(-50%)', display:'flex', gap:'.5rem', alignItems:'center', zIndex:10 }}>
             {[0,1,2].map(i => (
               <div key={i} style={{ height:4, borderRadius:2, background:T.lime, transition:'all .35s ease', opacity: i===0?1:.3, width: i===0?'28px':'8px' }} />
             ))}
           </div>
 
-          <div style={{ position:'absolute', top:'2.5rem', left:'3rem', zIndex:10 }}>
-            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'.85rem', letterSpacing:'.25em', color:'rgba(255,255,255,.25)', textTransform:'uppercase' }}>Serviços</span>
+          <div style={{ position:'absolute', top:'clamp(1.5rem,4vw,2.5rem)', left:'clamp(1.2rem,4vw,3rem)', zIndex:10 }}>
+            <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(.7rem,1.5vw,.85rem)', letterSpacing:'.25em', color:'rgba(255,255,255,.25)', textTransform:'uppercase' }}>Serviços</span>
           </div>
 
-          <div style={{ position:'absolute', bottom:'2.5rem', right:'3rem', zIndex:10, display:'flex', alignItems:'center', gap:'.5rem' }}>
-            <span style={{ fontSize:'.6rem', letterSpacing:'.2em', color:'rgba(255,255,255,.25)', textTransform:'uppercase' }}>Role para navegar</span>
+          <div style={{ position:'absolute', bottom:'clamp(1.5rem,4vw,2.5rem)', right:'clamp(1.2rem,4vw,3rem)', zIndex:10, display:'flex', alignItems:'center', gap:'.5rem' }}>
+            <span style={{ fontSize:'clamp(.5rem,1.2vw,.6rem)', letterSpacing:'.2em', color:'rgba(255,255,255,.25)', textTransform:'uppercase' }}>Role para navegar</span>
             <div style={{ width:24, height:1, background:'rgba(255,255,255,.2)' }} />
           </div>
         </div>
