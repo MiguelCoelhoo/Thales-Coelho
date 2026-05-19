@@ -48,7 +48,36 @@ body{margin:0;overflow-x:hidden}
 .tc-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C8FF00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
 option{background:${T.black}}
 
-@media(max-width:768px){#tc-dot,#tc-ring{display:none!important}body{cursor:auto!important}}
+@media(max-width:768px){#tc-dot,#tc-ring{display:none!important}body{cursor:auto!important}
+#tc-hero .tc-hero-sub{padding-left:1.5rem!important;padding-right:1.5rem!important;padding-bottom:5rem!important}
+#tc-hero .tc-stats-bar{gap:1.5rem!important;padding:0.8rem 1.5rem!important;flex-wrap:wrap!important;justify-content:space-around!important}
+#tc-hero .tc-stats-bar>div{flex:1 1 30%!important;text-align:center!important;justify-content:center!important}
+#tc-hero .tc-scroll-ind{display:none!important}
+.tc-section-pad{padding-left:1.5rem!important;padding-right:1.5rem!important;padding-top:4rem!important;padding-bottom:4rem!important}
+.tc-nav-mob{padding:1rem 1.5rem!important}
+.tc-nav-links-mob{display:none!important}
+.tc-srv-mob{height:auto!important}
+.tc-srv-mob>*{position:relative!important;height:auto!important}
+.tc-srv-track-mob{width:100%!important;flex-direction:column!important;transform:none!important}
+.tc-srv-panel-mob{width:100%!important;height:auto!important;min-height:100vh!important}
+.tc-srv-panel-mob>div{padding:5rem 1.5rem 3rem!important;grid-template-columns:1fr!important;gap:2rem!important}
+.tc-srv-panel-mob .tc-srv-side{display:none!important}
+.tc-srv-dots-mob{display:none!important}
+.tc-srv-label-mob{left:1.5rem!important;top:1.5rem!important}
+.tc-srv-hint-mob{display:none!important}
+.tc-srv-panel-mob .tc-srv-ghost{font-size:40vw!important;right:1rem!important}
+.tc-form-mob{padding:1.5rem!important}
+.tc-cta-mob{padding:4rem 1.5rem!important}
+.tc-footer-mob{padding:3rem 1.5rem 1.5rem!important}
+.tc-sobre-mob{grid-template-columns:1fr!important;gap:2.5rem!important;padding:4rem 1.5rem!important}
+.tc-valores-mob{padding:4rem 1.5rem!important}
+.tc-processo-mob{padding:4rem 1.5rem!important}
+.tc-agendar-mob{grid-template-columns:1fr!important;gap:3rem!important;padding:4rem 1.5rem!important}
+.tc-depo-mob{grid-template-columns:1fr!important;gap:2.5rem!important;padding:4rem 1.5rem!important}
+.tc-depo-stats-mob{grid-template-columns:1fr 1fr!important}
+.tc-hero-title{font-size:clamp(3.5rem,20vw,13rem)!important}
+.tc-hero-tagline{font-size:clamp(0.85rem,4vw,2rem)!important}
+}
 `;
 
 // ─── Char reveal helper — split text into spans, update by ref ──────
@@ -287,7 +316,7 @@ export function Portfolio() {
       });
 
       // ── Services horizontal carousel ─────────────────────────
-      if (srvContRef.current && srvTrackRef.current) {
+      if (!isMobile && srvContRef.current && srvTrackRef.current) {
         const rect = srvContRef.current.getBoundingClientRect();
         const scrollable = srvContRef.current.offsetHeight - winH;
         const p = Math.max(0, Math.min(1, -rect.top / scrollable));
@@ -362,7 +391,7 @@ export function Portfolio() {
       <div id="tc-prog" ref={progRef} />
 
       {/* ── NAV ─────────────────────────────────────────────── */}
-      <nav style={{
+      <nav className="tc-nav-mob" style={{
         position:'fixed', top:0, left:0, right:0, zIndex:500,
         padding:'1.4rem 3rem',
         background: scrolled ? 'rgba(6,6,6,.92)' : 'transparent',
@@ -377,7 +406,7 @@ export function Portfolio() {
           <span style={{ position:'absolute', top:-4, right:-18, color:T.lime, fontSize:'.6rem', fontWeight:700 }}>PT</span>
         </div>
 
-        <div style={{ display:'flex', gap:'2.5rem', alignItems:'center' }}>
+        <div className="tc-nav-links-mob" style={{ display:'flex', gap:'2.5rem', alignItems:'center' }}>
           {[['sobre','Sobre'],['valores','Valores'],['servicos','Serviços'],['agendar','Avaliação'],['depoimentos','Resultados']].map(([id,label]) => (
             <a key={id} href={`#${id}`} className="tc-navlink" style={{ fontSize:'.7rem', fontWeight:500, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(242,242,242,.65)' }}>{label}</a>
           ))}
@@ -403,26 +432,26 @@ export function Portfolio() {
 
         {/* Main title — centered, massive, split on scroll */}
         <div style={{ position:'absolute', inset:0, zIndex:3, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:0, pointerEvents:'none', userSelect:'none' }}>
-          <span ref={heroL1Ref} className="tc-outline" style={{
+          <span ref={heroL1Ref} className="tc-outline tc-hero-title" style={{
             fontFamily:"'Montserrat',sans-serif", fontWeight:900,
             fontSize:'clamp(5rem,16vw,13rem)', lineHeight:.88,
             letterSpacing:'-0.03em', willChange:'transform,opacity', display:'block',
           }}>THALES</span>
 
-          <span ref={heroL2Ref} style={{
+          <span ref={heroL2Ref} className="tc-hero-title" style={{
             fontFamily:"'Montserrat',sans-serif", fontWeight:900,
             fontSize:'clamp(5rem,16vw,13rem)', lineHeight:.88,
             letterSpacing:'-0.03em', color:T.white, willChange:'transform,opacity', display:'block',
           }}>COELHO</span>
 
           {/* Lime italic under */}
-          <span style={{ fontFamily:"'DM Sans',sans-serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(1rem,2.5vw,2rem)', color:T.lime, marginTop:'1.2rem', letterSpacing:'.01em' }}>
+          <span className="tc-hero-tagline" style={{ fontFamily:"'DM Sans',sans-serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(1rem,2.5vw,2rem)', color:T.lime, marginTop:'1.2rem', letterSpacing:'.01em' }}>
             transforma corpos, transforma vidas.
           </span>
         </div>
 
         {/* Tag + Sub + Btns — bottom-left */}
-        <div style={{ position:'relative', zIndex:4, padding:'0 3rem 7rem', maxWidth:1400, width:'100%', margin:'0 auto' }}>
+        <div className="tc-hero-sub" style={{ position:'relative', zIndex:4, padding:'0 3rem 7rem', maxWidth:1400, width:'100%', margin:'0 auto' }}>
           <div style={{ display:'flex', alignItems:'center', gap:'1rem', marginBottom:'1rem' }}>
             <div style={{ width:36, height:1, background:T.lime }} />
             <span style={{ color:T.lime, fontSize:'.62rem', letterSpacing:'.3em', fontWeight:500, textTransform:'uppercase' }}>Personal Trainer · Educação Física</span>
@@ -445,7 +474,7 @@ export function Portfolio() {
         </div>
 
         {/* Scroll indicator */}
-        <div style={{ position:'absolute', bottom:'7rem', right:'3rem', zIndex:4, display:'flex', flexDirection:'column', alignItems:'center', gap:'.5rem' }}>
+        <div className="tc-scroll-ind" style={{ position:'absolute', bottom:'7rem', right:'3rem', zIndex:4, display:'flex', flexDirection:'column', alignItems:'center', gap:'.5rem' }}>
           <span style={{ fontSize:'.5rem', letterSpacing:'.3em', writingMode:'vertical-rl', textTransform:'uppercase', color:'rgba(255,255,255,.3)' }}>SCROLL</span>
           <div style={{ width:1, height:40, background:'rgba(255,255,255,.12)', overflow:'hidden', position:'relative' }}>
             <div className="tc-scroll-pulse" style={{ position:'absolute', top:0, left:0, width:'100%', height:'100%', background:T.lime }} />
@@ -453,7 +482,7 @@ export function Portfolio() {
         </div>
 
         {/* Stats bar */}
-        <div style={{ position:'absolute', bottom:0, left:0, right:0, zIndex:5, background:'rgba(6,6,6,.8)', backdropFilter:'blur(12px)', borderTop:'.5px solid rgba(255,255,255,.06)', display:'flex', justifyContent:'center', gap:'5rem', padding:'1rem 3rem' }}>
+        <div className="tc-stats-bar" style={{ position:'absolute', bottom:0, left:0, right:0, zIndex:5, background:'rgba(6,6,6,.8)', backdropFilter:'blur(12px)', borderTop:'.5px solid rgba(255,255,255,.06)', display:'flex', justifyContent:'center', gap:'5rem', padding:'1rem 3rem' }}>
           {[
             { nRef: statN1Ref, n:'0+', l:'Alunos Ativos' },
             { nRef: statN2Ref, n:'0+', l:'Transformações' },
@@ -477,7 +506,7 @@ export function Portfolio() {
       </div>
 
       {/* ── SOBRE ────────────────────────────────────────────── */}
-      <section id="sobre" style={{ padding:'8rem 3rem', maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:'5rem', alignItems:'center' }}>
+      <section id="sobre" className="tc-sobre-mob" style={{ padding:'8rem 3rem', maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:'5rem', alignItems:'center' }}>
         {/* Image with clip-path reveal */}
         <div style={{ position:'relative' }}>
           <div style={{ position:'absolute', inset:0, border:`1px solid ${T.lime}`, transform:'translate(12px,12px)', borderRadius:2, zIndex:0 }} />
@@ -521,7 +550,7 @@ export function Portfolio() {
       </section>
 
       {/* ── VALORES ──────────────────────────────────────────── */}
-      <section id="valores" style={{ background:T.gray, padding:'7rem 3rem' }}>
+      <section id="valores" className="tc-valores-mob" style={{ background:T.gray, padding:'7rem 3rem' }}>
         <div style={{ maxWidth:1400, margin:'0 auto' }}>
           <Reveal>
             <div style={{ display:'flex', alignItems:'center', gap:'1rem', marginBottom:'.75rem' }}>
@@ -561,15 +590,15 @@ export function Portfolio() {
       </section>
 
       {/* ── SERVIÇOS — HORIZONTAL SCROLL CAROUSEL ────────────── */}
-      <div id="servicos" ref={srvContRef} style={{ height:'300vh', position:'relative' }}>
+      <div id="servicos" ref={srvContRef} className="tc-srv-mob" style={{ height:'300vh', position:'relative' }}>
         <div style={{ position:'sticky', top:0, height:'100vh', overflow:'hidden' }}>
           {/* Horizontal track — 3 × 100vw panels */}
-          <div ref={srvTrackRef} style={{ display:'flex', width:'300vw', height:'100%', willChange:'transform', transition:'none' }}>
+          <div ref={srvTrackRef} className="tc-srv-track-mob" style={{ display:'flex', width:'300vw', height:'100%', willChange:'transform', transition:'none' }}>
 
             {/* Panel 01 — TREINO ONLINE */}
-            <div className="tc-srv-panel" style={{ background:T.black, borderRight:'.5px solid rgba(255,255,255,.06)' }}>
+            <div className="tc-srv-panel tc-srv-panel-mob" style={{ background:T.black, borderRight:'.5px solid rgba(255,255,255,.06)' }}>
               {/* Giant ghost number */}
-              <div style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>01</div>
+              <div className="tc-srv-ghost" style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>01</div>
               {/* Diagonal lime accent */}
               <div style={{ position:'absolute', left:'42%', top:0, bottom:0, width:1, background:`linear-gradient(to bottom, transparent, ${T.lime}30, transparent)` }} />
 
@@ -590,7 +619,7 @@ export function Portfolio() {
                     <span className="tc-mag-inner">Saber Mais →</span>
                   </button>
                 </div>
-                <div style={{ display:'flex', flexDirection:'column', gap:'1.5rem' }}>
+                <div className="tc-srv-side" style={{ display:'flex', flexDirection:'column', gap:'1.5rem' }}>
                   {[['Planilha personalizada','Montada com base no seu nível, histórico e objetivos'],['Revisão semanal','Ajustes contínuos para manter o progresso em curva ascendente'],['Suporte diário','WhatsApp aberto para dúvidas, motivação e correções em tempo real']].map(([title,desc]) => (
                     <div key={title} style={{ padding:'1.5rem', border:'.5px solid rgba(255,255,255,.08)', borderRadius:2 }}>
                       <div style={{ color:T.lime, fontSize:'.65rem', letterSpacing:'.18em', fontWeight:600, textTransform:'uppercase', marginBottom:'.4rem' }}>{title}</div>
@@ -602,11 +631,11 @@ export function Portfolio() {
             </div>
 
             {/* Panel 02 — TREINO PRESENCIAL */}
-            <div className="tc-srv-panel" style={{ background:'#080808', borderRight:'.5px solid rgba(255,255,255,.06)' }}>
-              <div style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>02</div>
+            <div className="tc-srv-panel tc-srv-panel-mob" style={{ background:'#080808', borderRight:'.5px solid rgba(255,255,255,.06)' }}>
+              <div className="tc-srv-ghost" style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>02</div>
 
               {/* Image stripe */}
-              <div style={{ position:'absolute', right:'38%', top:0, bottom:0, width:'28%', overflow:'hidden' }}>
+              <div className="tc-srv-side" style={{ position:'absolute', right:'38%', top:0, bottom:0, width:'28%', overflow:'hidden' }}>
                 <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=900&auto=format&fit=crop&q=85" alt="Treino" style={{ width:'100%', height:'100%', objectFit:'cover', filter:'grayscale(40%)', opacity:.6 }} />
                 <div style={{ position:'absolute', inset:0, background:`linear-gradient(to right, #080808, transparent 30%, transparent 70%, #080808)` }} />
               </div>
@@ -628,7 +657,7 @@ export function Portfolio() {
                     <span className="tc-mag-inner">Saber Mais →</span>
                   </button>
                 </div>
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem' }}>
+                <div className="tc-srv-side" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem' }}>
                   {[['Correção ao vivo','Cada rep executada com técnica perfeita'],['Intensidade ideal','Carga e volume ajustados em tempo real'],['Foco total','Sessão 100% dedicada a você'],['Resultados rápidos','Menos tempo perdido, mais progresso real']].map(([title,desc]) => (
                     <div key={title} style={{ padding:'1.2rem', border:`.5px solid rgba(200,255,0,.15)`, borderRadius:2, background:`${T.lime}05` }}>
                       <div style={{ color:T.lime, fontSize:'.6rem', letterSpacing:'.15em', fontWeight:600, textTransform:'uppercase', marginBottom:'.3rem' }}>{title}</div>
@@ -640,8 +669,8 @@ export function Portfolio() {
             </div>
 
             {/* Panel 03 — CONSULTORIA */}
-            <div className="tc-srv-panel" style={{ background:T.gray }}>
-              <div style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>03</div>
+            <div className="tc-srv-panel tc-srv-panel-mob" style={{ background:T.gray }}>
+              <div className="tc-srv-ghost" style={{ position:'absolute', top:'50%', right:'4rem', transform:'translateY(-50%)', fontFamily:"'Bebas Neue',sans-serif", fontSize:'28vw', lineHeight:1, color:`${T.lime}08`, userSelect:'none', pointerEvents:'none' }}>03</div>
 
               <div style={{ position:'relative', zIndex:2, padding:'0 3rem 4rem', width:'100%', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4rem', alignItems:'flex-end' }}>
                 <div>
@@ -662,7 +691,7 @@ export function Portfolio() {
                 </div>
 
                 {/* Metrics */}
-                <div style={{ display:'flex', flexDirection:'column', gap:'1px', background:'rgba(255,255,255,.06)' }}>
+                <div className="tc-srv-side" style={{ display:'flex', flexDirection:'column', gap:'1px', background:'rgba(255,255,255,.06)' }}>
                   {[['−12kg','resultado médio em 90 dias'],['98%','taxa de satisfação dos alunos'],['Semanal','check-in com revisão de dados'],['24h','tempo médio de resposta'],].map(([val,desc]) => (
                     <div key={val} style={{ background:T.card, padding:'1.4rem 2rem', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                       <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2.2rem', color:T.lime }}>{val}</span>
@@ -675,19 +704,19 @@ export function Portfolio() {
           </div>
 
           {/* Progress dots */}
-          <div ref={srvDotsRef} style={{ position:'absolute', bottom:'2.5rem', left:'50%', transform:'translateX(-50%)', display:'flex', gap:'.5rem', alignItems:'center', zIndex:10 }}>
+          <div ref={srvDotsRef} className="tc-srv-dots-mob" style={{ position:'absolute', bottom:'2.5rem', left:'50%', transform:'translateX(-50%)', display:'flex', gap:'.5rem', alignItems:'center', zIndex:10 }}>
             {[0,1,2].map(i => (
               <div key={i} style={{ height:4, borderRadius:2, background:T.lime, transition:'all .35s ease', opacity: i===0?1:.3, width: i===0?'28px':'8px' }} />
             ))}
           </div>
 
           {/* Section label */}
-          <div style={{ position:'absolute', top:'2.5rem', left:'3rem', zIndex:10 }}>
+          <div className="tc-srv-label-mob" style={{ position:'absolute', top:'2.5rem', left:'3rem', zIndex:10 }}>
             <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'.85rem', letterSpacing:'.25em', color:'rgba(255,255,255,.25)', textTransform:'uppercase' }}>Serviços</span>
           </div>
 
           {/* Scroll hint */}
-          <div style={{ position:'absolute', bottom:'2.5rem', right:'3rem', zIndex:10, display:'flex', alignItems:'center', gap:'.5rem' }}>
+          <div className="tc-srv-hint-mob" style={{ position:'absolute', bottom:'2.5rem', right:'3rem', zIndex:10, display:'flex', alignItems:'center', gap:'.5rem' }}>
             <span style={{ fontSize:'.6rem', letterSpacing:'.2em', color:'rgba(255,255,255,.25)', textTransform:'uppercase' }}>Role para navegar</span>
             <div style={{ width:24, height:1, background:'rgba(255,255,255,.2)' }} />
           </div>
@@ -695,7 +724,7 @@ export function Portfolio() {
       </div>
 
       {/* ── PROCESSO ─────────────────────────────────────────── */}
-      <section style={{ background:T.gray, padding:'7rem 3rem' }}>
+      <section className="tc-processo-mob" style={{ background:T.gray, padding:'7rem 3rem' }}>
         <div style={{ maxWidth:1400, margin:'0 auto' }}>
           <Reveal>
             <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,6vw,5rem)', lineHeight:.88, margin:'0 0 4rem', letterSpacing:'-.01em' }}>O PROCESSO</h2>
@@ -723,7 +752,7 @@ export function Portfolio() {
       </section>
 
       {/* ── AGENDAR ──────────────────────────────────────────── */}
-      <section id="agendar" style={{ background:T.black, padding:'7rem 3rem', borderTop:'.5px solid rgba(255,255,255,.06)' }}>
+      <section id="agendar" className="tc-agendar-mob" style={{ background:T.black, padding:'7rem 3rem', borderTop:'.5px solid rgba(255,255,255,.06)' }}>
         <div style={{ maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:'5rem', alignItems:'start' }}>
           <div>
             <Reveal>
@@ -757,7 +786,7 @@ export function Portfolio() {
           </div>
 
           <Reveal delay={150}>
-            <form onSubmit={e=>e.preventDefault()} style={{ display:'flex', flexDirection:'column', gap:'.9rem', background:T.card, padding:'2.5rem', border:'.5px solid rgba(255,255,255,.07)', borderRadius:2 }}>
+            <form className="tc-form-mob" onSubmit={e=>e.preventDefault()} style={{ display:'flex', flexDirection:'column', gap:'.9rem', background:T.card, padding:'2.5rem', border:'.5px solid rgba(255,255,255,.07)', borderRadius:2 }}>
               <div style={{ marginBottom:'.4rem' }}>
                 <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.45rem', marginBottom:'.2rem' }}>Preencha os dados</div>
                 <div style={{ fontSize:'.75rem', color:'rgba(242,242,242,.35)', fontWeight:300 }}>Thales entrará em contato em até 24h.</div>
@@ -786,7 +815,7 @@ export function Portfolio() {
       </section>
 
       {/* ── DEPOIMENTOS ──────────────────────────────────────── */}
-      <section id="depoimentos" style={{ background:T.gray, padding:'7rem 3rem' }}>
+      <section id="depoimentos" className="tc-depo-mob" style={{ background:T.gray, padding:'7rem 3rem' }}>
         <div style={{ maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:'4rem', alignItems:'center' }}>
           <Reveal>
             <div style={{ background:T.card, padding:'3.5rem', border:'.5px solid rgba(255,255,255,.06)', borderRadius:2, position:'relative', overflow:'hidden' }}>
@@ -807,7 +836,7 @@ export function Portfolio() {
           </Reveal>
 
           <Reveal delay={150}>
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1px', background:'rgba(255,255,255,.05)' }}>
+            <div className="tc-depo-stats-mob" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1px', background:'rgba(255,255,255,.05)' }}>
               {[['−12kg','Ana em 4 meses'],['+200%','Energia diária'],['98%','Satisfação geral'],['3×','Mais força em 60 dias']].map(([stat,label]) => (
                 <div key={stat} style={{ background:T.card, padding:'2.2rem 2rem', borderLeft:`2px solid ${T.lime}` }}>
                   <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.2rem,3.5vw,3rem)', color:T.white, lineHeight:1, marginBottom:'.4rem' }}>{stat}</div>
@@ -820,7 +849,7 @@ export function Portfolio() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
-      <section style={{ background:T.lime, padding:'8rem 3rem', textAlign:'center' }}>
+      <section className="tc-cta-mob" style={{ background:T.lime, padding:'8rem 3rem', textAlign:'center' }}>
         <Reveal>
           <h2 style={{ fontFamily:"'Montserrat',sans-serif", fontWeight:900, fontSize:'clamp(3.5rem,10vw,8rem)', lineHeight:.88, color:T.black, margin:'0 0 1.5rem', letterSpacing:'-.03em' }}>
             PRONTO PARA<br />MUDAR?
@@ -836,7 +865,7 @@ export function Portfolio() {
       </section>
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
-      <footer style={{ background:T.black, padding:'5rem 3rem 2.5rem', borderTop:'.5px solid rgba(255,255,255,.06)' }}>
+      <footer className="tc-footer-mob" style={{ background:T.black, padding:'5rem 3rem 2.5rem', borderTop:'.5px solid rgba(255,255,255,.06)' }}>
         <div style={{ maxWidth:1400, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))', gap:'3rem', marginBottom:'3rem' }}>
           <div>
             <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2.2rem', marginBottom:'.5rem' }}>THALES COELHO PT</div>
